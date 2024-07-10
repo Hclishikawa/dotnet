@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/Hclishikawa/dotnet.git'
+                git branch: 'main', url: 'https://github.com/Hclishikawa/dotnet.git'
             }
         }
 
@@ -22,6 +22,18 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'dotnet build ${SOLUTION_NAME} -c Release'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'dotnet test ${TEST_PROJECT_NAME}'
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                sh 'dotnet publish ${SOLUTION_NAME} -c Release -o ./publish'
             }
         }
     }
