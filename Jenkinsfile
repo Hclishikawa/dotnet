@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        SOLUTION_NAME = 'dotnet'
+        SOLUTION_NAME = 'bcreadgen'
 
     }
 
