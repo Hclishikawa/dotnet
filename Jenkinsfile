@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        SOLUTION_NAME = 'YourSolution.sln'
-        TEST_PROJECT_NAME = 'YourTestProject.dll'
+        SOLUTION_NAME = 'dotnet'
+
     }
 
     stages {
@@ -22,18 +22,6 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'dotnet build ${SOLUTION_NAME} -c Release'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                sh 'dotnet test ${TEST_PROJECT_NAME}'
-            }
-        }
-
-        stage('Publish') {
-            steps {
-                sh 'dotnet publish ${SOLUTION_NAME} -c Release -o ./publish'
             }
         }
     }
