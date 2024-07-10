@@ -1,45 +1,28 @@
 pipeline {
-    agent {
-        docker {
-            image 'mcr.microsoft.com/dotnet/sdk:8.0' // Use the appropriate .NET SDK version
-            args '-u root:root'
-        }
+    agent any
+
+    environment {
+        SOLUTION_NAME = 'YourSolution.sln'
+        TEST_PROJECT_NAME = 'YourTestProject.dll'
     }
+
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/microsoft/dotnet.git'
+                git 'https://github.com/Hclishikawa/dotnet.git'
             }
         }
-        stage('Restore') {
+
+        stage('Restore NuGet Packages') {
             steps {
-                sh 'dotnet restore'
+                sh 'dotnet restore ${SOLUTION_NAME}'
             }
         }
+
         stage('Build') {
             steps {
-                sh 'dotnet build --no-restore'
+                sh 'dotnet build ${SOLUTION_NAME} -c Release'
             }
-        }
-        stage('Test') {
-            steps {
-                sh 'dotnet test --no-build'
-            }
-        }
-        stage('Publish') {
-            steps {
-                sh 'dotnet publish --no-build -o out'
-            }
-        }
-    }
-    post {
-        always {
-            archiveArtifacts artifacts: '**/out/**', allowEmptyArchive: true
-        }
-        failure {
-            mail to: 'weevocation@gmail.com',
-                 subject: 'Build failed: ${currentBuild.fullDisplayName}',
-                 body: 'Something is wrong with the build ${env.BUILD_URL}'
         }
     }
 }
